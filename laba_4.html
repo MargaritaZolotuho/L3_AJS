@@ -1,0 +1,75 @@
+<html>
+<head>
+<title></title>
+</head>
+<body>
+<p>Откройте консоль браузера, чтобы увидеть результаты.</p>
+
+  <script>
+   function Data(url, callback) {
+       fetch(url).then(response => response.json()).then(data => callback(data)); 
+    }
+
+    function SortedPosts() {
+    Data('https://jsonplaceholder.typicode.com/posts', (posts) => {
+        const sorted = posts.sort((a, b) => b.title.length - a.title.length);
+        console.log('Posts:', sorted);
+      });
+    }
+
+    function SortedComments() {
+     Data('https://jsonplaceholder.typicode.com/comments', (comments) => {
+    const sorted = comments.sort((a, b) => a.name.localeCompare(b.name));
+    console.log('Comments:', sorted);
+      });
+    }
+
+    function Users() {
+      return fetch('https://jsonplaceholder.typicode.com/users').then(r => r.json()).then(users => users.map(u => ({
+          id: u.id,
+          name: u.name,
+          username: u.username,
+          email: u.email,
+          phone: u.phone
+        })))
+        .then(filtered => console.log('Users:', filtered));
+    }
+
+    function Todos() {
+      return fetch('https://jsonplaceholder.typicode.com/todos').then(r => r.json()).then(todos => {
+          const filtered = todos.filter(t => !t.completed);
+          console.log('Todos:', filtered);
+        });
+    }
+
+    async function PostsCommentsAsync() {
+      const posts = await fetch('https://jsonplaceholder.typicode.com/posts').then(r => r.json());
+      const comments = await fetch('https://jsonplaceholder.typicode.com/comments').then(r => r.json());
+      console.log('Async Posts:', posts.sort((a, b) => b.title.length - a.title.length));
+      console.log('Async Comments:', comments.sort((a, b) => a.name.localeCompare(b.name)));
+    }
+
+    async function UsersTodosAsync() {
+      const users = await fetch('https://jsonplaceholder.typicode.com/users').then(r => r.json());
+      const todos = await fetch('https://jsonplaceholder.typicode.com/todos').then(r => r.json());
+      const filteredUsers = users.map(u => ({
+        id: u.id,
+        name: u.name,
+        username: u.username,
+        email: u.email,
+        phone: u.phone
+      }));
+      const filteredTodos = todos.filter(t => !t.completed);
+      console.log('Async Users:', filteredUsers);
+      console.log('Async Todos:', filteredTodos);
+    }
+
+    SortedPosts();
+    SortedComments();
+    Users();
+    Todos();
+    PostsCommentsAsync();
+    UsersTodosAsync();
+  </script>
+</body>
+</html>
